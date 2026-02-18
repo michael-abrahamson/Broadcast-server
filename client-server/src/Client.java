@@ -14,6 +14,7 @@ public final class Client {
     private final int PORT = 5050;
 
     private String username;
+    private Socket socket;
 
     private final Scanner scanner = new Scanner(System.in);
     private BufferedReader in;
@@ -105,16 +106,10 @@ public final class Client {
      */
     public final void closeClient() {
         try {
-            if (!in.equals(null)) {
-                in.close();
+
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
             }
-            if (!out.equals(null)) {
-                out.close();
-            }
-            if (!scanner.equals(null)) {
-                scanner.close();
-            }
-            System.exit(0);
 
         } catch (Exception e) {
             System.out.println("Error closing client: " + e.getMessage());

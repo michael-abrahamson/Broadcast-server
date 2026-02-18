@@ -35,7 +35,9 @@ public class ClientHandler implements Runnable {
             listenForMessages();
         } catch (Exception e) {
         } finally {
+            System.out.println("Client " + username + " disconnected.");
             closeSocket();
+            Server.removeClient(this);
         }
     }
 
@@ -44,15 +46,16 @@ public class ClientHandler implements Runnable {
             String message;
 
             while ((message = in.readLine()) != null) {
-            if (!message.isEmpty()) {
-                if (!message.startsWith("USERNAME: ")) {
-                    System.out.println("Message received from " + message);
-                    Server.broadcastMessage(message);
-                    // skip username creation messages
+                if (!message.isEmpty()) {
+                    if (!message.startsWith("USERNAME: ")) {
+                        System.out.println("Message received from " + message);
+                        Server.broadcastMessage(message);
+                        // skip username creation messages
+                    }
+
                 }
-                
             }
-        }
+            System.out.println("Client " + username + " disconnected.");
         } catch (Exception e) {
             System.out.println("Error in listen for messages: " + e.getMessage());
         }
