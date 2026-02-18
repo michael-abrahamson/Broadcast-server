@@ -33,7 +33,7 @@ public final class Client {
 
             // Send server your username
             out.println("USERNAME: " + username);
-            System.out.println("\n Type in terminal to send messages to the server. Type 'EXIT' to exit the client.");
+            System.out.println("\n Type in terminal to send messages to the server. Type 'EXIT' to exit the client.\n");
             
             // server listening thread
             new Thread(this::listenForMessages).start();
