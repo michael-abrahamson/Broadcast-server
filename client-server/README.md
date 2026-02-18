@@ -1,18 +1,62 @@
-## Getting Started
+# Expense Tracker (Java)
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+This is an introductory project from the roadmap.sh Backend Developer Roadmap focused on practicing core Java fundamentals.
 
-## Folder Structure
+The goal of this project was to reinforce:
 
-The workspace contains two folders by default, where:
+- Public classes and class structure
+- Constructors
+- Server/client interactions
+- Socket coding -> java.net
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+---
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## How to clone
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+    git clone https://github.com/michael-abrahamson/Broadcast-server
 
-## Dependency Management
+## How to Run
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+If you are using the included Makefile, you will need at least three terminals open
+
+Once you launch all terminals, read below for the available commands and follow the Command Line prompts
+
+Server Terminal:
+
+    make server
+
+Client Terminal1:
+
+    make client
+
+Client terminal2:
+
+    make client:
+
+### Server Commands:
+
+    CLOSE:
+        - Closes all client, server sockets and safely kills the session
+
+    USERS:
+        - Prints all users currently connected to the server
+
+    TEST
+        - This method sends a broadcast to all users. This method was purely to speed up testing
+
+### Client Commands
+
+    EXIT
+        - closes client socket and gracefully shuts down session
+
+---
+
+## Project Links
+
+GitHub Repository:
+[https://github.com/michael-abrahamson/expenseTracker](https://github.com/michael-abrahamson/Broadcast-server)
+
+Project Specification (roadmap.sh):
+https://roadmap.sh/projects/broadcast-server
+
+---
