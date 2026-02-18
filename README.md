@@ -21,15 +21,15 @@ If you are using the included Makefile, you will need at least three terminals o
 
 Once you launch all terminals, read below for the available commands and follow the Command Line prompts
 
-Server Terminal:
+#### Server Terminal:
 
     make server
 
-Client Terminal1:
+#### Client Terminal1:
 
     make client
 
-Client terminal2:
+#### Client terminal2:
 
     make client:
 
