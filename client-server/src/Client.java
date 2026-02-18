@@ -1,30 +1,54 @@
+
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
+
 /**
- * This class is only ran by the client and is responsible for handling all client associated items such as messaging/broadcasting + receiving messages from the server.
+ * This class is only ran by the client and is responsible for handling all
+ * client associated items such as messaging/broadcasting + receiving messages
+ * from the server.
  */
-public class Client {
+public final class Client {
+
     private final String SERVER_ADDRESS = "localhost";
     private final int PORT = 5050;
 
     private String username;
 
     private final Scanner scanner = new Scanner(System.in);
+    private BufferedReader in;
+    private PrintWriter out;
 
-    public Client() {
+    public void start() {
         this.username = "DefaultUser";
         System.out.println("Client is starting...");
 
         try (Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
             System.out.println("Client is connected to server at: " + SERVER_ADDRESS + ":" + PORT);
-            
+
             setUsername(username);
+
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+
+            // Send server your username
+            out.println("USERNAME: " + username);
+            System.out.println("\n Type in terminal to send messages to the server. Type 'EXIT' to exit the client.");
             
-            while (true) { 
-                
+            // server listening thread
+            new Thread(this::listenForMessages).start();
+
+            while (true) {
+
+                createMessage();
+                if (socket.isClosed()) {
+                    closeClient();
+                    break;
+                }
             }
         } catch (Exception e) {
             System.out.println("Error in client: " + e.getMessage());
+            closeClient();
         }
     }
 
@@ -43,5 +67,56 @@ public class Client {
 
         this.username = username;
         System.out.println("\nYour username has been updated to: " + this.username);
+    }
+
+    /**
+     * listen for messages from the server and print them out
+     */
+    public final void listenForMessages() {
+        String message;
+        try {
+            while ((message = in.readLine()) != null) {
+                if (message.startsWith(username + ": ")) {
+                    continue; // skip messages sent by this client
+                }
+                System.out.println(message);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in listen for messages: " + e.getMessage());
+        }
+    }
+
+    /**
+     * create a message and send it to the server
+     */
+    public final void createMessage() {
+        String message = scanner.nextLine();
+        if (message.equals("EXIT")) {
+            System.out.println("Exiting client...");
+            closeClient();
+        }
+        out.println(message);
+    }
+
+    /**
+     * Gracefully terminate the client and close all resources
+     */
+    public final void closeClient() {
+        try {
+            if (!in.equals(null)) {
+                in.close();
+            }
+            if (!out.equals(null)) {
+                out.close();
+            }
+            if (!scanner.equals(null)) {
+                scanner.close();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error closing client: " + e.getMessage());
+        } finally {
+            System.exit(0); // executes regardless of whether an exception is thrown or not, ensuring the client is terminated
+        }
     }
 }
