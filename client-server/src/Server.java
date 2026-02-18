@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * This class handles all server associated items and calls the ClientHandler class for messaging/broadcasting + receiving messages from clients.
+ * This class handles all server associated items and calls the ClientHandler
+ * class for messaging/broadcasting + receiving messages from clients.
  */
 public class Server {
+
     private final int PORT = 5050;
     private final static List<ClientHandler> clients = new ArrayList<>();
 
@@ -18,34 +20,42 @@ public class Server {
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server is listening on port: " + PORT);
-            
-            while (true) { 
+
+            while (true) {
                 Socket socket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(socket);
                 clients.add(clientHandler);
                 // parallelize client handlers
                 new Thread(clientHandler).start(); // socket listener
 
-                listenToServer(); // keyboard listener
-                
-                // Method to check if users are still connected to the server
+                new Thread(this::listenToServer).start(); // keyboard listener
 
+                // Method to check if users are still connected to the server
+                checkClientConnections();
             }
         } catch (Exception e) {
             System.out.println("Error in server: " + e.getMessage());
         }
 
-        
     }
 
     public static synchronized void broadcastMessage(String message) {
-        
+
         System.out.println("Broadcasting message: " + message);
         clients.forEach(client -> client.broadcastClientMessage(message));
 
     }
 
-    public synchronized void removeClient(ClientHandler clientHandler) {
+    public static void checkClientConnections() {
+        clients.forEach(client -> {
+            if (!client.getSocket().isConnected()) {
+                removeClient(client);
+            }
+        });
+        
+    }
+
+    public static synchronized void removeClient(ClientHandler clientHandler) {
         clients.remove(clientHandler);
     }
 
@@ -60,17 +70,16 @@ public class Server {
     }
 
     private void listenToServer() {
-        while (true) { 
+        while (true) {
             String input = scanner.nextLine();
             if (input.equals("USERS")) {
                 displayUsers();
             }
 
             if (input.equals("TEST")) {
-                broadcastMessage("This is a test message from the server.");
+                clients.forEach(client -> client.broadcastServerMessage("This is a test message from the server!"));
             }
         }
     }
-
 
 }

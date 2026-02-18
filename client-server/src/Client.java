@@ -112,6 +112,7 @@ public final class Client {
             if (!scanner.equals(null)) {
                 scanner.close();
             }
+            System.exit(0);
 
         } catch (Exception e) {
             System.out.println("Error closing client: " + e.getMessage());

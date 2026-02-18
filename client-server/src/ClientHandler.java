@@ -54,7 +54,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public final void createServerMessage() {
+    public final void broadcastServerMessage(String message) {
+        out.println("Server: " + message);
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
     public final void broadcastClientMessage(String message) {
