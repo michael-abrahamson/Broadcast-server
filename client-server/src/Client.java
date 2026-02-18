@@ -27,7 +27,7 @@ public final class Client {
             System.out.println("Client is connected to server at: " + SERVER_ADDRESS + ":" + PORT);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            
+
             setUsername(username);
             out.println("USERNAME: " + username); // send server your username
 
@@ -67,6 +67,7 @@ public final class Client {
 
         this.username = username;
         System.out.println("\nYour username has been updated to: " + this.username);
+        scanner.nextLine(); // consume the newline character left by next()
     }
 
     /**

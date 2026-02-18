@@ -45,8 +45,12 @@ public class ClientHandler implements Runnable {
 
             while ((message = in.readLine()) != null) {
             if (!message.isEmpty()) {
-                System.out.println("Message received from " + message);
-                Server.broadcastMessage(message);
+                if (!message.startsWith("USERNAME: ")) {
+                    System.out.println("Message received from " + message);
+                    Server.broadcastMessage(message);
+                    // skip username creation messages
+                }
+                
             }
         }
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +13,10 @@ public class Server {
 
     private final int PORT = 5050;
     private final static List<ClientHandler> clients = new ArrayList<>();
+
+    // message history -> hashMap<Username, List<Messages>>
+    private final static HashMap<String, List<String>> messageHistory = new HashMap<>();
+
 
     private Scanner scanner = new Scanner(System.in);
 
@@ -41,7 +46,7 @@ public class Server {
 
     public static synchronized void broadcastMessage(String message) {
 
-        System.out.println("Broadcasting message: " + message);
+        //System.out.println("Broadcasting message: " + message);
         clients.forEach(client -> client.broadcastClientMessage(message));
 
     }
