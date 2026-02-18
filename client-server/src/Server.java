@@ -13,11 +13,12 @@ public class Server {
 
     private final int PORT = 5050;
     private final static List<ClientHandler> clients = new ArrayList<>();
+    
 
     // message history -> hashMap<Username, List<Messages>>
     private final static HashMap<String, List<String>> messageHistory = new HashMap<>();
 
-
+    private static ServerSocket serverSocket;
     private Scanner scanner = new Scanner(System.in);
 
     public void start() {
@@ -25,6 +26,7 @@ public class Server {
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server is listening on port: " + PORT);
+            new Thread(this::listenToServer).start(); // keyboard listener
 
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -33,7 +35,7 @@ public class Server {
                 // parallelize client handlers
                 new Thread(clientHandler).start(); // socket listener
 
-                new Thread(this::listenToServer).start(); // keyboard listener
+                
 
                 // Method to check if users are still connected to the server
                 checkClientConnections();
@@ -42,6 +44,10 @@ public class Server {
             System.out.println("Error in server: " + e.getMessage());
         }
 
+    }
+
+    public static synchronized void setServerSocket(ServerSocket serverSocket) {
+        Server.serverSocket = serverSocket;
     }
 
     public static synchronized void broadcastMessage(String message) {
@@ -66,6 +72,27 @@ public class Server {
 
     private void closeServer() {
         // close server socket
+        try {
+
+            //close all client sockets
+            clients.forEach(client -> {
+                try {
+                    if (client.getSocket() != null && !client.getSocket().isClosed()) {
+                        client.getSocket().close();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error closing client socket: " + e.getMessage());
+                }
+            });
+
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Error closing server: " + e.getMessage());
+        } finally {
+            System.exit(0);
+        }
     }
 
     private void displayUsers() {
@@ -83,6 +110,11 @@ public class Server {
 
             if (input.equals("TEST")) {
                 clients.forEach(client -> client.broadcastServerMessage("This is a test message from the server!"));
+            }
+
+            if (input.equals("CLOSE")) {
+                closeServer();
+                break;
             }
         }
     }

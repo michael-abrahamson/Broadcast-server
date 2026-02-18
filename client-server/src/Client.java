@@ -84,6 +84,8 @@ public final class Client {
                 }
                 System.out.println(message);
             }
+            System.out.println("Server has closed the connection.");
+            closeClient();
         } catch (Exception e) {
             System.out.println("Error in listen for messages: " + e.getMessage());
         }
@@ -111,7 +113,7 @@ public final class Client {
                 socket.close();
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error closing client: " + e.getMessage());
         } finally {
             System.exit(0); // executes regardless of whether an exception is thrown or not, ensuring the client is terminated
