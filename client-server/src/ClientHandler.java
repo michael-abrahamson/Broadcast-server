@@ -45,7 +45,7 @@ public class ClientHandler implements Runnable {
 
             while ((message = in.readLine()) != null) {
             if (!message.isEmpty()) {
-                System.out.println("Message received from " + username + ": " + message);
+                System.out.println("Message received from " + message);
                 Server.broadcastMessage(message);
             }
         }
@@ -63,7 +63,7 @@ public class ClientHandler implements Runnable {
     }
 
     public final void broadcastClientMessage(String message) {
-        out.println(username + ": " + message);
+        out.println(message);
     }
 
     public final void closeSocket() {

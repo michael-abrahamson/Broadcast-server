@@ -25,14 +25,14 @@ public final class Client {
 
         try (Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
             System.out.println("Client is connected to server at: " + SERVER_ADDRESS + ":" + PORT);
-
-            setUsername(username);
-
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            
+            setUsername(username);
+            out.println("USERNAME: " + username); // send server your username
 
-            // Send server your username
-            out.println("USERNAME: " + username);
+            
+
             System.out.println("\n Type in terminal to send messages to the server. Type 'EXIT' to exit the client.\n");
             
             // server listening thread
@@ -77,6 +77,7 @@ public final class Client {
         try {
             while ((message = in.readLine()) != null) {
                 if (message.startsWith(username + ": ")) {
+                    System.out.println("Message sent by this client: " + message);
                     continue; // skip messages sent by this client
                 }
                 System.out.println(message);
@@ -95,7 +96,7 @@ public final class Client {
             System.out.println("Exiting client...");
             closeClient();
         }
-        out.println(message);
+        out.println(username + ": " + message);
     }
 
     /**
