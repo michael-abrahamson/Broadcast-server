@@ -31,7 +31,7 @@ Once you launch all terminals, read below for the available commands and follow 
 
 #### Client terminal2:
 
-    make client:
+    make client
 
 ### Server Commands:
 
