@@ -1,4 +1,4 @@
-# Expense Tracker (Java)
+# Broadcast-Server (Java)
 
 This is an introductory project from the roadmap.sh Backend Developer Roadmap focused on practicing core Java fundamentals.
 
